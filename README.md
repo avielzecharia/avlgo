@@ -1,2 +1,2 @@
 # avlgo
-Simple API for advanced algorithms &amp; data-structures implementation
+A Simple API for advanced algorithms &amp; data-structures.
