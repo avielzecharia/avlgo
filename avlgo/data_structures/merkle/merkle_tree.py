@@ -126,6 +126,9 @@ class MerkleTree:
         if not self.is_empty:
             return self._root.data_hash
 
+    def __len__(self):
+        return len(self.leaves)
+
     def _split_node(self, split_node, data):
         """
         Given a split node and data to insert, connect a new node to the split node with the given data.
