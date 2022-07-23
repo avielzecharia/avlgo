@@ -3,6 +3,7 @@ from collections import namedtuple
 
 from avlgo.data_structures.utils import BinaryTreeNode, Direction
 
+
 LeafProof = namedtuple("LeafProof", ["tree_digest", "hash_alg", "hashes", "directions"])
 
 
@@ -241,7 +242,3 @@ class _MerkleNode(BinaryTreeNode):
     @property
     def is_full(self):
         return self.capacity == self.leaves_counter
-
-    @property
-    def is_leaf(self):
-        return self.left is None and self.right is None
