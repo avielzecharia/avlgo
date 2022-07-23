@@ -43,6 +43,18 @@ class BinaryTreeNode:
         else:
             raise InvalidChildException("child is not one of node children")
 
+    def child(self, direction):
+        """
+        Retrieve the suitable child by direction.
+        :type direction: Direction
+        """
+        if direction == Direction.LEFT:
+            return self.left
+        elif  direction == Direction.RIGHT:
+            return self.right
+        else:
+            raise InvalidDirection()
+
     @property
     def direction(self):
         return self.parent.child_direction(self)
@@ -53,4 +65,8 @@ class BinaryTreeNode:
 
 
 class InvalidChildException(Exception):
+    pass
+
+
+class InvalidDirection(Exception):
     pass
