@@ -4,7 +4,7 @@ from collections import namedtuple
 from avlgo.data_structures.utils import BinaryTreeNode, Direction
 
 
-LeafProof = namedtuple("LeafProof", ["tree_digest", "hash_alg", "hashes", "directions"])
+MerkleLeafProof = namedtuple("MerkleLeafProof", ["hash_alg", "hashes", "directions"])
 
 
 class MerkleTree:
@@ -44,7 +44,7 @@ class MerkleTree:
         self._leaves.append(new_node)
         return len(self._leaves) - 1
 
-    def proof_leaf(self, leaf_id):
+    def proof(self, leaf_id):
         """
         Generate a proof for leaf existence in the merkle tree.
 
@@ -54,7 +54,7 @@ class MerkleTree:
         :param leaf_id: leaf identifier
         :type leaf_id: int
         :return: leaf existence proof "down-to-top"
-        :rtype: LeafProof
+        :rtype: MerkleLeafProof
         """
         if leaf_id < 0 or leaf_id >= len(self.leaves):
             raise RuntimeError("Invalid leaf index")
@@ -70,39 +70,35 @@ class MerkleTree:
 
             node_scanner = node_scanner.parent
 
-        return LeafProof(
-            tree_digest=self.tree_digest,
+        return MerkleLeafProof(
             hash_alg=self._hash_alg,
             directions=directions,
             hashes=hashes
         )
 
     @staticmethod
-    def validate_proof(tree_digest, data, leaf_proof):
+    def validate(tree_digest, data, proof):
         """
-        Verify whether a given generated leaf proof sis valid in the merkle tree.
+        Verify whether a given generated leaf proof is valid in the merkle tree.
 
         Time Complexity: O(logn)
 
         :param tree_digest: merkle tree hash to verify with
         :type tree_digest: bytes
-        :param data: daa to verify if exists
+        :param data: data to verify if exists
         :type data: bytes
-        :param leaf_proof: leaf proof to verify
-        :type leaf_proof: LeafProof
+        :param proof: merkle leaf proof to verify
+        :type proof: MerkleLeafProof
         :rtype: bool
         """
-        if leaf_proof.tree_digest != tree_digest:
-            return False
-
-        verification_hash = leaf_proof.hash_alg(data).hexdigest().encode()
-        for node_hash, direction in zip(leaf_proof.hashes, leaf_proof.directions):
+        verification_hash = proof.hash_alg(data).hexdigest().encode()
+        for node_hash, direction in zip(proof.hashes, proof.directions):
             if direction == Direction.RIGHT:
                 to_hash = verification_hash + node_hash
             else:
                 to_hash = node_hash + verification_hash
 
-            verification_hash = leaf_proof.hash_alg(to_hash).hexdigest().encode()
+            verification_hash = proof.hash_alg(to_hash).hexdigest().encode()
 
         return verification_hash == tree_digest
 

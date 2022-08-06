@@ -1,9 +1,27 @@
 from enum import Enum
 
 
+def get_hash_size(hash_alg):
+    """
+    Get the number of bits for hash block size.
+    :param hash_alg: hash algorithm to generate the tree with (e.g. hashlib.sha256)
+    :rtype: int
+    """
+    return 8 * hash_alg().block_size
+
+
 class Direction(Enum):
     LEFT = 0
     RIGHT = 1
+
+    @property
+    def opposite(self):
+        if self == self.RIGHT:
+            return self.LEFT
+        elif self == self.LEFT:
+            return self.RIGHT
+
+        raise InvalidDirection()
 
 
 class BinaryTreeNode:

@@ -1,6 +1,10 @@
 from hashlib import sha256
+from collections import namedtuple
 
-from avlgo.data_structures.utils import BinaryTreeNode, Direction
+from avlgo.data_structures.utils import BinaryTreeNode, Direction, get_hash_size
+
+
+SparseMerkleMarkProof = namedtuple("SparseMerkleLeafProof", ["hash_alg", "hashes", "directions"])
 
 
 class SparseMerkleTree:
@@ -11,6 +15,8 @@ class SparseMerkleTree:
     Time Complexity: O(log^2(U)) for all operations
     Space Complexity: O(#marked_elements + log^2(U))
     """
+    _DUMMY_HASHES_POOL = dict()
+
     NON_EXISTING_LEAF_DATA = b'0'
     EXISTING_LEAF_DATA = b'1'
 
@@ -24,12 +30,14 @@ class SparseMerkleTree:
         :param hash_alg: hash algorithm to generate the tree with (e.g. hashlib.sha256)
         """
         self._hash_alg = hash_alg
-        self._hash_size = 4 * len(hash_alg().hexdigest())
-        self._dummy_hashes = self._generate_dummy_hashes()
+        self._hash_size = get_hash_size(hash_alg)
 
-        self._root = _SparseMerkleNode.create_root(hash_size=self._hash_size)
+        self._root = _SparseMerkleNode.create_root(
+            hash_size=self._hash_size,
+            dummy_hashes=self._get_dummy_hashes(hash_alg)
+        )
 
-    def mark_leaf(self, digest):
+    def mark(self, digest):
         """
         In order to mark a digest to be exist in the tree, we are creating the full path
         from the root to the representing node (without dummy nodes in the direct path).
@@ -44,12 +52,12 @@ class SparseMerkleTree:
             scanner.right = _SparseMerkleNode.create_node(
                 parent=scanner,
                 is_dummy=(direction != Direction.RIGHT),
-                dummy_hashes=self._dummy_hashes
+                dummy_hashes=self._get_dummy_hashes(self._hash_alg)
             )
             scanner.left = _SparseMerkleNode.create_node(
                 parent=scanner,
                 is_dummy=(direction != Direction.LEFT),
-                dummy_hashes=self._dummy_hashes
+                dummy_hashes=self._get_dummy_hashes(self._hash_alg)
             )
 
         # now child contains the digest leaf, mark child as existing and update the tree hashes
@@ -71,28 +79,78 @@ class SparseMerkleTree:
         for scanner, direction in self._tree_navigator(digest):
             pass
 
-        # child can be None only if we stopped at the middle of the navigation
-        return scanner.child(direction) is not None
+        lowest_node = scanner.child(direction)
+        return lowest_node is not None and lowest_node.is_marked
 
-    # TODO: proof & validate
-
-    def _generate_dummy_hashes(self):
+    def proof(self, digest):
         """
-        Generate known hashes of the initial sparse merkle tree.
+        Generate a proof for digest mark in the sparse merkle tree.
+
+        Time Complexity: O(log(U))
+        Space Complexity: O(log(U))
+
+        :param digest: digest to proof
+        :type digest: bytes
+        :return: digest mark proof "down-to-top"
+        :rtype: SparseMerkleMarkProof
+        """
+        directions = list()
+        hashes = list()
+
+        for scanner, direction in self._tree_navigator(digest):
+            if scanner.is_leaf:
+                break
+
+            sibling_child = scanner.child(direction.opposite)
+            hashes.insert(0, sibling_child.data)
+            directions.insert(0, sibling_child.direction)
+
+        return SparseMerkleMarkProof(
+            hash_alg=self._hash_alg,
+            directions=directions,
+            hashes=hashes
+        )
+
+    @classmethod
+    def validate(cls, tree_digest, is_marked, proof):
+        """
+        Verify whether a given generated marked leaf proof is valid in the sparse merkle tree.
 
         Time Complexity: O(log^2(U))
         Space Complexity: O(log^2(U))
 
-        :rtype: list[bytes]
+        :param tree_digest: sparse merkle tree hash to verify with
+        :type tree_digest: bytes
+        :param is_marked: whether the digest node is marked.
+        :type is_marked: bool
+        :param proof: sparse merkle leaf proof to verify
+        :type proof: SparseMerkleMarkProof
+        :rtype: bool
         """
-        dummy_hashes = [self.NON_EXISTING_LEAF_DATA]
-        for _ in range(self._hash_size):
-            next_level_dummy = 2 * dummy_hashes[-1]
-            dummy_hashes.append(
-                self._hash_alg(next_level_dummy).hexdigest().encode()
-            )
+        data = cls.EXISTING_LEAF_DATA if is_marked else cls._get_dummy_hashes(proof.hash_alg)[get_hash_size(proof.hash_alg) - len(proof.hashes)]
 
-        return dummy_hashes
+        verification_hash = data
+        for node_hash, direction in zip(proof.hashes, proof.directions):
+            if direction == Direction.RIGHT:
+                to_hash = verification_hash + node_hash
+            else:
+                to_hash = node_hash + verification_hash
+
+            verification_hash = proof.hash_alg(to_hash).hexdigest().encode()
+
+        return verification_hash == tree_digest
+
+    @property
+    def root(self):
+        return self._root
+
+    @property
+    def bits(self):
+        return self._hash_size
+
+    @property
+    def tree_digest(self):
+        return self._root.data
 
     def _tree_navigator(self, digest):
         """
@@ -114,17 +172,31 @@ class SparseMerkleTree:
             yield scanner, direction
             scanner = scanner.child(direction)
 
-    @property
-    def root(self):
-        return self._root
+    @classmethod
+    def _generate_dummy_hashes(cls, hash_alg):
+        """
+        Generate known hashes of the initial sparse merkle tree.
 
-    @property
-    def bits(self):
-        return self._hash_size
+        Time Complexity: O(log^2(U))
+        Space Complexity: O(log^2(U))
 
-    @property
-    def tree_digest(self):
-        return self._root.data
+        :rtype: list[bytes]
+        """
+        dummy_hashes = [cls.NON_EXISTING_LEAF_DATA]
+        for _ in range(get_hash_size(hash_alg)):
+            next_level_dummy = 2 * dummy_hashes[-1]
+            dummy_hashes.append(
+                hash_alg(next_level_dummy).hexdigest().encode()
+            )
+
+        return dummy_hashes
+
+    @classmethod
+    def _get_dummy_hashes(cls, hash_alg):
+        if hash_alg not in cls._DUMMY_HASHES_POOL:
+            cls._DUMMY_HASHES_POOL[hash_alg] = cls._generate_dummy_hashes(hash_alg)
+
+        return cls._DUMMY_HASHES_POOL[hash_alg]
 
 
 class _SparseMerkleNode(BinaryTreeNode):
@@ -135,14 +207,14 @@ class _SparseMerkleNode(BinaryTreeNode):
         self.is_dummy = is_dummy
 
     @classmethod
-    def create_root(cls, hash_size):
+    def create_root(cls, hash_size, dummy_hashes):
         """
         Creates new dummy root node in the sparse merkle tree.
         """
         return cls(
             height=hash_size,
             is_dummy=True,
-            data=SparseMerkleTree.NON_EXISTING_LEAF_DATA
+            data=dummy_hashes[hash_size]
         )
 
     @classmethod
@@ -175,7 +247,14 @@ class _SparseMerkleNode(BinaryTreeNode):
 
     @property
     def is_absolute_leaf(self):
+        """
+        Determine whether a given node in the virtual sparse graph is a real leaf.
+        """
         return self.height == 0
+
+    @property
+    def is_marked(self):
+        return self.data == SparseMerkleTree.EXISTING_LEAF_DATA
 
 
 class InternalNodeCannotBeMarkedException(Exception):
