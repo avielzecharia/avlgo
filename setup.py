@@ -9,6 +9,6 @@ setup(
     python_requires=">=3.9.1",
     url="https://github.com/avielzecharia/avlgo",
     include_package_data=True,
-    install_requires=[],
+    install_requires=["numpy"],
     packages=find_packages(exclude=["tests"])
 )
