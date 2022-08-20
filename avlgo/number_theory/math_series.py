@@ -1,8 +1,12 @@
 from math import comb
 import numpy as np
 
+from avlgo.number_theory.fibonacci import fibonacci_nth
 from avlgo.number_theory.math_funcs import power
 from avlgo.number_theory.math_sums import consecutive_progression_sum
+
+
+fibonacci_nth = fibonacci_nth
 
 
 def triangular_nth(n):
