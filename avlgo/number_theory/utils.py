@@ -1,5 +1,43 @@
 
 
+def extended_gcd(a, b):
+    """
+    Extended Euclidean Algorithm.
+
+    Time Complexity: O(log(n))
+    Space Complexity: O(1)
+
+    :type a: int
+    :type b: int
+    :return: (x, y, gcd(a, b)) s.t. a * x + b * Y = gcd(a, b)
+    :rtype: tuple[int, int, int]
+    """
+    # r(0), r(1) = a, b
+    # s(0), t(0) = 1, 0
+    # s(1), t(1) = 0, 1
+    old_r, r = a, b
+    old_s, old_t = 1, 0
+    s, t = 0, 1
+
+    while r != 0:
+        # q = r(i) / r(i+1)
+        q = old_r // r
+
+        # r(i) = q * r(i+1) + r(i+2) -> r(i+2) = r(i) - q * r(i+1)
+        old_r, r = r, old_r - q * r
+
+        # r(i+2) = a * s(i+2) + b * t(i+2)
+        # r(i+2) = r(i) - q * r(i+1) = [a * s(i) + b * t(i)] - [a * s(i+1) + b * t(i+1)] * q =
+        # a * [s(i) - s(i+1) * q] + b * [t(i) - t(i+1) * q]
+        # -> s(i+2) = s(i) - s(i+1) * q
+        # -> t(i+2) = t(i) - t(i+1) * q
+        old_s, s = s, old_s - q * s
+        old_t, t = t, old_t - q * t
+
+    # since r=0, gcd(a, b) = old_r and old_r = a * old_s + b * old_t = gcd(a, b)
+    return old_s, old_t, old_r
+
+
 def power(base, exp, mod=None, identity=1):
     """
     Calculating exponent of different objects efficiently.
@@ -107,7 +145,7 @@ def digit_sum(n, base=10, p=1, mod=None):
     """
     d_sum = 0
     while n:
-        d_sum += power(n % base, p, mod)
+        d_sum += pow(n % base, p, mod)
         if mod:
             d_sum %= mod
 
