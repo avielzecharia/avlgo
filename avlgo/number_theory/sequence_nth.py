@@ -2,8 +2,8 @@ from math import comb
 import numpy as np
 
 from avlgo.number_theory.fibonacci import fibonacci_nth
-from avlgo.number_theory.math_funcs import power
-from avlgo.number_theory.math_sums import consecutive_progression_sum
+from avlgo.number_theory.utils import power
+from avlgo.number_theory.progression_sums import consecutive_progression_sum
 
 
 fibonacci_nth = fibonacci_nth
@@ -57,7 +57,7 @@ def catalan_nth(n):
     return comb(2 * n, n) // (n + 1)
 
 
-def linear_recursive_series_nth(n, coefficients, base_cases, mod=None):
+def linear_recursive_sequence_nth(n, coefficients, base_cases, mod=None):
     """
     Calculate the nth element in a custom linear recursive series.
 
