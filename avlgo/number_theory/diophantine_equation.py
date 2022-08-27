@@ -108,7 +108,7 @@ def chinese_remainder_equation(a_vector, m_vector):
     :rtype: int
     """
     # This is basically a bijection function Z(m0, ..., mk) -> Z(m)
-    # More then that, it is a bijection function coprimes Z(m0, ..., mk) -> coprimes Z(m)
+    # More than that, it is a bijection function coprimes Z(m0, ..., mk) -> coprimes Z(m)
     # The other direction Z(m) -> Z(m0, ..., mk) could be achieved by ai = x % mi.
     # -
     # After we got that unique base, all we have to do is to attach the ith elements of a_vector and base
