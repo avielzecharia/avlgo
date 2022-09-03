@@ -84,7 +84,7 @@ class DisjointSet:
             # same leaders -> same disjoint set.
             return
 
-        # first disjoint set height is smaller then the second one, make the second as the first parent.
+        # first disjoint set height is smaller than the second one, make the second as the first parent.
         # in this way we promise to rank up iff the number of nodes at least doubled.
         if first_leader.rank < second_leader.rank:
             first_leader.parent = second_leader
