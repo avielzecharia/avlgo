@@ -178,3 +178,30 @@ def recursive_digit_sum(n, base=10):
         return base - 1
 
     return recursive_sum
+
+
+# That is a very coll trick because we can create a lot of cool polynomials to calculates complicated sums efficiently.
+def power_set_sum(elements, p=1, mod=None):
+    """
+    Calculate the sum of the inner multiply of all subset of elements.
+
+    Time Complexity: O(#elements)
+    Space Complexity: O(1)
+
+    :param elements: iterable object of elements
+    :type elements: list|set
+    :param mod: return the result modulo mod
+    :type mod: int
+    :param p: refer each element as element ^ p
+    :type p: int
+    :return: SUM(PI(S)^p) for S in power_set(elements)
+    """
+    pow_sum = 1
+    for element in elements:
+        # The trick is to calculate the polynomial (e0^p + 1) * ... (en^p + 1)
+        # So, all the possible combinations multiplies will be summed.
+        pow_sum *= power(element, p, mod=mod) + 1
+        if mod:
+            pow_sum %= mod
+
+    return pow_sum - 1
