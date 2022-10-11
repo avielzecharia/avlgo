@@ -1,11 +1,10 @@
-from itertools import islice, accumulate
 from math import log, floor
 
 
 class CompactRank:
     """
     This class implements succinct compact data structure for the rank query problem.
-    Given an iterable of 0's & 1's, query number of ones proceeds a given index.
+    Given an iterable of 0's & 1's, query number of 1's proceeds a given index.
     This data structure uses indirection technique, and can be improved to be succinct using 2 levels of indirection.
 
     Complexity: n = number of elements.
@@ -25,14 +24,22 @@ class CompactRank:
         """
         self._size = len(elements)
         self._block_size = floor(log(self._size, 2) / 2)
-
-        self._blocks = list(accumulate(
-            sum(islice(elements, ind, ind + self._block_size))
-            for ind in range(0, self._size, self._block_size)
-        ))
-        self._blocks.insert(0, 0)       # _blocks[x] is the sum of all 1's elements up to _block_size * x
-
         self._block_bruteforce = self._generate_bruteforce_map(self._block_size)
+
+        ones_counter = 0
+        self._blocks_counter = [0]          # number of 1's up to a given block
+        self._blocks_integer = []           # integer representation of a given block
+        for block_start in range(0, self._size, self._block_size):
+            block_end = min(block_start + self._block_size, self._size)
+
+            block_integer = 0
+            for element_ind in range(block_start, block_end):
+                element = bool(elements[element_ind])
+                ones_counter += element
+                block_integer = 2 * block_integer + element
+
+            self._blocks_counter.append(ones_counter)
+            self._blocks_integer.append(block_integer)
 
     def rank(self, index):
         """
@@ -45,13 +52,30 @@ class CompactRank:
         :type index: int
         :rtype: int
         """
-        if not 0 <= index <= self._size:
+        if not 0 <= index < self._size:
             raise IndexError(f"Query index {index} ot of range {self._size}")
 
-        return self._blocks[index // self._block_size] + self._block_bruteforce[index % self._block_size]
+        block_index = index // self._block_size
+        block_start = block_index * self._block_size
+        block_end = min(block_start + self._block_size, self._size)
+        real_block_size = block_end - block_start
+        reminder_size = index % self._block_size
+        reminder_integer = self._blocks_integer[block_index] >> (real_block_size - reminder_size)
+        return self._blocks_counter[block_index] + self._block_bruteforce[reminder_integer]
 
     def __len__(self):
         return self._size
+
+    def _block_index(self, index):
+        """
+        Calculate block index, start, end of a given index.
+        :type index: int
+        :rtype: tuple[int, int, int]
+        """
+        block_index = index // self._block_size
+        block_start = block_index * self._block_size
+        block_end = min(block_start + self._block_size, self._size)
+        return block_index, block_start, block_end
 
     @staticmethod
     def _generate_bruteforce_map(size):
