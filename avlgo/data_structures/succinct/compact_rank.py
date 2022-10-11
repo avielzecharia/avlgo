@@ -66,17 +66,6 @@ class CompactRank:
     def __len__(self):
         return self._size
 
-    def _block_index(self, index):
-        """
-        Calculate block index, start, end of a given index.
-        :type index: int
-        :rtype: tuple[int, int, int]
-        """
-        block_index = index // self._block_size
-        block_start = block_index * self._block_size
-        block_end = min(block_start + self._block_size, self._size)
-        return block_index, block_start, block_end
-
     @staticmethod
     def _generate_bruteforce_map(size):
         """
