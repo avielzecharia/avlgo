@@ -66,6 +66,53 @@ def linear_equation(coefficients, value):
     return solution
 
 
+# Another way to deal with #solution counting is to use combinatorics polynomial tools.
+# Assuming we got the the following infinite polynomial:
+# (x^0 + x^C0 + x^2C0 + ... ) * (x^0 + x^C1 + x^2C1 + ... ) * ... * (x^0 + x^Ck + x^2Ck + ...) =
+# 1 / [(1 - x^C0) * (1 - x^C1) * ... * (1 - x^Ck)]
+# We can see that our solution is the coefficient of x^value in this infinite polynomial.
+# Let P(x) be the denominator polynomial, then using Maclaurin series for F(x) = 1 / P(x)
+# we can understand that our result is  F(x)_nth_derivative(value) / n!
+def linear_equation_sol_counter(coefficients, value, p=0, mod=None):
+    """
+    Counting the number of solution for a given linear equation `sigma Ci * Xi = value for i in [1, #coefficients]`.
+    More precisely, calculating sigma(MUL(Ci ^ (Xi * p)) for i in [1, #coefficients]) for all solutions X.
+    NOTE: equation coefficients must be positive.
+
+    Time Complexity: O(#coefficients * value)
+    Space Complexity: O(value)
+
+    :param coefficients: equation coefficients
+    :type coefficients: list[int]
+    :param value: equation value
+    :type value: int
+    :param p:
+    :type p: int
+    :param mod: calculate result modulo mod
+    :type mod: int
+    :return: list of equation solutions where the ith value is the number of solutions for equation = i
+    :rtype: list[int]
+    """
+    equation_sols = [0] * (value + 1)
+    equation_sols[0] = 1    # trivial zeros solution
+
+    # Bottom-Up
+    for coefficient in coefficients:
+        # At this point of time the ith element in equation_sols equals to the number of solutions
+        # which are built only from previous iterated coefficients.
+        # Note that for that reason duplications are avoided - only unseen coefficients might be chosen each time.
+        for i in range(coefficient, value + 1):
+            # Now, assuming equation_sols contains the solution including the current coefficient up to the ith index,
+            # let's choose coefficient to be part of the sum of the ith value, then using recursion.
+            # Note that multiple choosing of the same coefficient is allowed,
+            # we achieved that by filling the equation_sols from left-to-right iteration.
+            equation_sols[i] += equation_sols[i - coefficient] * pow(coefficient, p, mod)
+            if mod:
+                equation_sols[i] %= mod
+
+    return equation_sols
+
+
 def chinese_remainder_linear_equation(a_vector, b_vector, m_vector):
     """
     Solve chinese remainder linear equation.
