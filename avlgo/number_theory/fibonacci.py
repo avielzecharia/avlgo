@@ -1,4 +1,4 @@
-from avlgo.number_theory.sequence_nth import linear_recursive_sequence_nth
+import avlgo.number_theory.sequence_nth as sequence_nth
 
 
 def fibonacci_nth(n, mod=None):
@@ -16,7 +16,7 @@ def fibonacci_nth(n, mod=None):
     :return: Fn
     :rtype: int
     """
-    return linear_recursive_sequence_nth(
+    return sequence_nth.linear_recursive_sequence_nth(
         n,
         coefficients=[1, 1],
         base_cases=[0, 1],

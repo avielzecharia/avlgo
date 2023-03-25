@@ -1,14 +1,14 @@
 from math import comb
 import numpy as np
 
-from avlgo.number_theory.fibonacci import fibonacci_nth
+import avlgo.number_theory.fibonacci as fibonacci
 from avlgo.number_theory.primes import prime_nth
 from avlgo.number_theory.utils import power
 from avlgo.number_theory.progression_sums import consecutive_progression_sum
 
 
 prime_nth = prime_nth
-fibonacci_nth = fibonacci_nth
+fibonacci_nth = fibonacci.fibonacci_nth
 
 
 def triangular_nth(n):
