@@ -212,7 +212,3 @@ def integer_composition_forcing_k(n, k, mod=None):
         result %= mod
 
     return result
-
-
-if __name__ == '__main__':
-    print(integer_composition_forcing_k(10, 9))

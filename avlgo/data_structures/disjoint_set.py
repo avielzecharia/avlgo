@@ -121,9 +121,9 @@ class DisjointSetElement:
     Represent an element in the disjoint set data structure.
     """
     def __init__(self, value):
-        self.value = value      # element data to store.
-        self.rank = 1           # the `maximal` height of the element node in his related tree.
-        self.parent = self      # the parent of the element node in his related tree.
+        self._value = value         # element data to store.
+        self._rank = 1              # the `maximal` height of the element node in his related tree.
+        self._parent = self         # the parent of the element node in his related tree.
 
     @property
     def is_leader(self):
@@ -132,4 +132,16 @@ class DisjointSetElement:
         :return: True if the element is a set leader.
         :rtype: bool
         """
-        return self.parent == self
+        return self._parent == self
+
+    @property
+    def value(self):
+        return self._value
+
+    @property
+    def rank(self):
+        return self._rank
+
+    @property
+    def parent(self):
+        return self._parent

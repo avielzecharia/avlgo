@@ -3,6 +3,9 @@ from datetime import timedelta
 from datetime import datetime
 
 
+# TODO: timeit & memory_profiler packages
+
+
 @contextmanager
 def context_time_profiler():
     """
@@ -13,7 +16,7 @@ def context_time_profiler():
     print(datetime.now() - start_time)
 
 
-def time_profiler(logic, *args, **kwargs):
+def time_profiler(logic, repeat=1, *args, **kwargs):
     """
     Profile a given function logic execution time.
 
@@ -21,13 +24,15 @@ def time_profiler(logic, *args, **kwargs):
     :rtype: timedelta
     """
     start_time = datetime.now()
-    logic(*args, **kwargs)
-    return datetime.now() - start_time
+    for _ in range(repeat):
+        logic(*args, **kwargs)
+
+    return (datetime.now() - start_time) / repeat
 
 
 def compare_avg_time(logic1, args1_list, kwargs1_list, logic2, args2_list, kwargs2_list):
     """
-    Profile a given function logic execution time.
+    Compare average execution of two function logic execution time.
 
     :return: average logic execution time of each logic.
     :rtype: tuple[timedelta, timedelta]
