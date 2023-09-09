@@ -8,8 +8,10 @@ from avlgo.number_theory.sequence_nth import linear_recursive_sequence_nth
 def integer_partition_range(n, mod=None):
     """
     Calculating the number of ways of writing all numbers from `start` to n as a sum of positive integers.
+
     Time Complexity: O(n ^ 1.5)
     Space Complexity: O(n)
+
     :type n: int
     :type mod: int
     :return: list of number of partitions for all number up to n.
@@ -46,8 +48,10 @@ def integer_partition_range(n, mod=None):
 def integer_partition(n, mod=None):
     """
     Calculating the number of ways of writing n as a sum of positive integers.
+
     Time Complexity: O(n ^ 1.5)
     Space Complexity: O(n)
+
     :type n: int
     :type mod: int
     :return: number of integer partitions of n.
@@ -59,8 +63,10 @@ def integer_partition(n, mod=None):
 def integer_k_composition(n, k):
     """
     Calculating the number of compositions of n into exactly k parts (a k-composition)
+
     Time Complexity: O(n)
     Space Complexity: O(1)
+
     :type n: int
     :type k: int
     :return: number of k-compositions of n.
@@ -78,8 +84,10 @@ def integer_k_composition(n, k):
 def integer_weak_k_composition(n, k):
     """
     Calculating the number of compositions of n into exactly k parts (a k-composition) allowing zeros.
+
     Time Complexity: O(n)
     Space Complexity: O(1)
+
     :type n: int
     :type k: int
     :return: number of weak k-compositions of n.
@@ -97,8 +105,10 @@ def integer_weak_k_composition(n, k):
 def integer_compositions(n, mod=None):
     """
     Calculates the number of integer partitions with order matter - integer composition.
+
     Time Complexity: O(log(n))
     Space Complexity: O(1)
+
     :type n: int
     :type mod: int
     :return: number of ways to write n as a sum of number with order matter.
@@ -119,8 +129,10 @@ def integer_compositions(n, mod=None):
 def integer_composition_forcing_k_range(n, k, mod=None):
     """
     Calculates number of integer composition which contains the integer k for all numbers up to n.
+
     Time Complexity: O(n)
     Space Complexity: O(n)
+
     :type n: int
     :type k: int
     :type mod: int
@@ -161,8 +173,10 @@ def integer_composition_forcing_non_k(n, k, mod=None):
     """
     Calculates number of integer composition which must not contain the integer k.
     Note: for large k's, please use the range method.
+
     Time Complexity: O(k ^ 3 * log(n))
     Space Complexity: O(k ^ 2)
+
     :type n: int
     :type k: int
     :type mod: int
@@ -195,8 +209,10 @@ def integer_composition_forcing_k(n, k, mod=None):
     """
     Calculates number of integer composition which contains the integer k.
     Note: for large k's, please use the range method.
+
     Time Complexity: O(k ^ 3 * log(n))
     Space Complexity: O(k ^ 2)
+
     :type n: int
     :type k: int
     :type mod: int
