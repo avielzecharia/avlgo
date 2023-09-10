@@ -14,16 +14,16 @@ class CompactRank:
     """
     def __init__(self, elements):
         """
-        Initialize
+        Pre-Processing Rank DS on elements.
 
         Time Complexity: O(n)
         Space Complexity: O(n)
 
-        :param elements: elements to
-        :type elements: iterable
+        :param elements: elements to query on.
+        :type elements: iterable with __getitem__, __len__
         """
         self._size = len(elements)
-        self._block_size = floor(log(self._size, 2) / 2)
+        self._block_size = max(floor(log(self._size, 2) / 2), 1)
         self._block_bruteforce = self._generate_bruteforce_map(self._block_size)
 
         ones_counter = 0
@@ -50,18 +50,21 @@ class CompactRank:
 
         :param index: index to query.
         :type index: int
+        :returns: counter
         :rtype: int
         """
         if not 0 <= index < self._size:
             raise IndexError(f"Query index {index} ot of range {self._size}")
 
         block_index = index // self._block_size
+        block_inner_index = index % self._block_size
+
         block_start = block_index * self._block_size
         block_end = min(block_start + self._block_size, self._size)
         real_block_size = block_end - block_start
-        reminder_size = index % self._block_size
-        reminder_integer = self._blocks_integer[block_index] >> (real_block_size - reminder_size)
-        return self._blocks_counter[block_index] + self._block_bruteforce[reminder_integer]
+
+        block_inner_integer = self._blocks_integer[block_index] >> (real_block_size - block_inner_index)
+        return self._blocks_counter[block_index] + self._block_bruteforce[block_inner_integer]
 
     def __len__(self):
         return self._size
