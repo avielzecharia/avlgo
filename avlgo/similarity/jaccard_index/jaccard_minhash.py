@@ -1,3 +1,4 @@
+import hashlib
 import heapq
 import math
 import statistics
@@ -9,7 +10,8 @@ class JaccardMinHash(JaccardSimilarity):
     """
     This class implements the approximation version of the Jaccard Index Similarity algorithm.
 
-    NOTE: This implementation uses a single hash function technique.
+    NOTE:   This implementation uses a single hash function technique.
+            Therefore, sketch_max_size << number of genes (otherwise use simple similarity).
 
     Using the MinHash technique:
     Sketch Time Complexity: O((genes + 1/e^2) * log(1/d))
@@ -26,6 +28,7 @@ class JaccardMinHash(JaccardSimilarity):
         :type approximation_probability: float
         :param hash_func: universal hash function for genes ordering. The function signature must be:
                             def sim_hash(data, seed=?): return int
+                            See str_hash_func for example.
         :type hash_func: function obj, int -> int
         """
         super().__init__(genes_extractor)
@@ -34,8 +37,8 @@ class JaccardMinHash(JaccardSimilarity):
         self._approximation_probability = approximation_probability
         self._hash_genes_func = hash_func
 
-        self._block_max_sketch_size = math.ceil(1 / self._approximation_rate ** 2)
-        self._block_sketch_repeat = math.ceil(math.log(1 / self._approximation_probability))
+        self._block_max_sketch_size = math.ceil(1 / self._approximation_rate ** 2)              # Chebyshev inequality
+        self._block_sketch_repeat = math.ceil(math.log(1 / self._approximation_probability))    # Chernoff inequality
 
     def generate_sketch(self, data):
         """
@@ -48,6 +51,8 @@ class JaccardMinHash(JaccardSimilarity):
         genes = set(self._genes_extractor(data))
         block_sketch_size = min(len(genes), self._block_max_sketch_size)
 
+        # Using single MinHash technique by choosing n-smallest hashes
+        # Then, repeat this experiment multiple times for probability improvements.
         return [
             set(heapq.nsmallest(
                 n=block_sketch_size,
@@ -65,6 +70,7 @@ class JaccardMinHash(JaccardSimilarity):
         :return: Jaccard index J(S1, S2)
         :rtype: float
         """
+        # Each MinHash set experiment should be calculated as regular exact set similarity
         return statistics.median(
             len(block_sketch1.intersection(block_sketch2)) / len(block_sketch1.union(block_sketch2))
             for block_sketch1, block_sketch2 in zip(sketch1, sketch2)
@@ -100,3 +106,10 @@ class JaccardMinHash(JaccardSimilarity):
         :rtype: int
         """
         return self._block_max_sketch_size * self._block_sketch_repeat
+
+
+def str_hash_func(str_gene, seed=0):
+    gene_hash = hashlib.sha256(f"{str_gene} + {str(seed)}".encode()).hexdigest()
+    gene_reduced_hash = int(gene_hash[:16], 16)
+
+    return gene_reduced_hash
