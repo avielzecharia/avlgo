@@ -23,6 +23,11 @@ Here you can find some advanced data structures with no specific theme that can 
 Merkle Tree variations is one example, but you can even find API for classical problems such as the Compact Rank !
 
 
+## Similarity ##
+Estimating how similar two sets are using advanced techniques in different models (sketching).
+
+The main one is using MinHash, which can be used for Code Similarity purposes or clustering problems.
+
 ## Streaming ##
 Contains a set of simple algorithms for processing data streams in which the input is presented as a sequence of items.
 
