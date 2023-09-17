@@ -181,23 +181,3 @@ def _mismatches_by_candidates_wave(text, pattern, candidates):
                 mismatches.append(text_index)
 
     return mismatches
-
-
-if __name__ == '__main__':
-    print(search_pattern_in_text('abadabc', 'aba'))
-
-    # print(generate_pattern_witness_table('abcdabcfffffabcdabczzzzz'))
-    # print(generate_pattern_witness_table('abcdabcfffffabcdabcdzzzz'))
-    # print(generate_pattern_witness_table('abcdabcfffffabcdabcdabzz'))
-    """
-    [24, 1, 2, 3, 7, 5, 6, 7, 8, 9, 10, 11, 19, 13, 14, 15, 19, 17, 18, 19, 20, 21, 22, 23]
-[24, 1, 2, 3, 7, 5, 6, 7, 8, 9, 10, 11, 19, 13, 14, 15, 20, 17, 18, 19, 20, 21, 22, 23]
-[24, 1, 2, 3, 7, 5, 6, 7, 8, 9, 10, 11, 19, 13, 14, 15, 22, 17, 18, 19, 22, 21, 22, 23]
-    """
-
-    """
-    In [712]: generate_pattern_witness_table('abcababdbabcabbabc')
-Out[712]: [18, 1, 2, 5, 4, 7, 6, 7, 8, 14, 10, 11, 14, 13, 14, 18, 16, 17]
-
-
-    """
