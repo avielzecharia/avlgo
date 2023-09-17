@@ -28,6 +28,13 @@ Estimating how similar two sets are using advanced techniques in different model
 
 The main one is using MinHash, which can be used for Code Similarity purposes or clustering problems.
 
+
+## Pattern Matching ##
+Simple methods to find a given sequence of tokens (text) for the presence of the constituents of some pattern.
+
+For example a simple 1D text searching which can be used for many purposes.
+
+
 ## Streaming ##
 Contains a set of simple algorithms for processing data streams in which the input is presented as a sequence of items.
 
