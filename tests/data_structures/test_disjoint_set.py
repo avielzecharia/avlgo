@@ -39,7 +39,7 @@ def test_advanced_union():
         assert ds.find(ds.elements[i]) == ds.find(ds.elements[i % 2])
 
 
-def test_memory():
+def test_space():
     ds = DisjointSet()
     for i in range(10 ** 4):
         ds.make_set(i)
@@ -68,6 +68,3 @@ def test_time():
             ds.find(ds.elements[i])
 
     assert timer.time.total_seconds() < 1
-
-
-test_advanced_union()
