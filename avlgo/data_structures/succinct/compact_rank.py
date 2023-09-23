@@ -54,7 +54,7 @@ class CompactRank:
         :rtype: int
         """
         if not 0 <= index < self._size:
-            raise IndexError(f"Query index {index} ot of range {self._size}")
+            raise IndexError(f"Query index {index} out of range 0...{self._size}")
 
         block_index = index // self._block_size
         block_inner_index = index % self._block_size

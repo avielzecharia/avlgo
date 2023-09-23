@@ -56,7 +56,7 @@ class CompactSelect:
         :rtype: int
         """
         if not 0 < counter <= self._counter:
-            raise IndexError(f"Query counter {counter} ot of range {self._counter}")
+            raise IndexError(f"Query counter {counter} out of range 1...{self._counter}")
 
         counter -= 1
         block_index = counter // self._block_size
