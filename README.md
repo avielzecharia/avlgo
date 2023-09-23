@@ -15,31 +15,31 @@ For possible functions|usage|complexity please read the DOC string of the releva
 Every function is well documented for study purposes. 
 You may read the function code and understand the algorithm idea pretty easily.
 
-## [Number Theory](avlgo\number_theory) ##
+## [Number Theory](avlgo/number_theory) ##
 A set of algorithms related to advanced number theory. 
 The module contains strong core methods and tricks which can be used in order to solve complex problems easily.
 
 For example, integer partition variations, prime factorization variations, and much more !
 
-## [Data Structures](avlgo\data_structures) ##
+## [Data Structures](avlgo/data_structures) ##
 Here you can find some advanced data structures with no specific theme that can be easily used for different purposes.
 
 Merkle Tree variations is one example, but you can even find API for classical problems such as the Compact Rank !
 
 
-## [Similarity](avlgo\similarity) ##
+## [Similarity](avlgo/similarity) ##
 Estimating how similar two sets are using advanced techniques in different models (sketching).
 
 The main one is using MinHash, which can be used for Code Similarity purposes or clustering problems.
 
 
-## [Pattern Matching](avlgo\pattern_matching) ##
+## [Pattern Matching](avlgo/pattern_matching) ##
 Simple methods to find a given sequence of tokens (text) for the presence of the constituents of some pattern.
 
 For example a simple 1D text searching which can be used for many purposes.
 
 
-## [Streaming](avlgo\streaming) ##
+## [Streaming](avlgo/streaming) ##
 Contains a set of simple algorithms for processing data streams in which the input is presented as a sequence of items.
 
 Frequency moments is a classical problem in this field, which you can import and use !
