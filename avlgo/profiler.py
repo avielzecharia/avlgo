@@ -49,4 +49,8 @@ def object_memory_bits(obj):
 
 
 def object_memory_bytes(obj):
-    return asizeof.asizeof(obj) // 8
+    return object_memory_bits(obj) // 8
+
+
+def object_memory_dword(obj):
+    return object_memory_bytes(obj) // 4
