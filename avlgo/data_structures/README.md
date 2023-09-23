@@ -19,6 +19,8 @@ You may use the following API:
 ## Disjoint Set ##
 Also called a union–find data structure or merge–find set, 
 is a data structure that stores a partition of a set into disjoint subsets.
+This DS can be used for many purposes such as keep track of connected components of an undirected graph 
+or even for finding MST in Kruskal's algorithm. 
 
 The following API is exposed to the user:
 * `DisjointSet` - `make_set`, `find`, `union` with nearly constant time.
