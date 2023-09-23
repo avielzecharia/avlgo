@@ -44,5 +44,9 @@ def compare_avg_time(logic1, args1_list, kwargs1_list, logic2, args2_list, kwarg
     return logic1_time / len(args1_list), logic2_time / len(args2_list)
 
 
-def object_memory(obj):
+def object_memory_bits(obj):
     return asizeof.asizeof(obj)
+
+
+def object_memory_bytes(obj):
+    return asizeof.asizeof(obj) // 8
