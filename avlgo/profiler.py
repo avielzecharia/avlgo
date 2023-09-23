@@ -1,9 +1,7 @@
 from contextlib import contextmanager
 from datetime import timedelta
 from datetime import datetime
-
-
-# TODO: timeit & memory_profiler packages
+from pympler import asizeof
 
 
 @contextmanager
@@ -44,3 +42,7 @@ def compare_avg_time(logic1, args1_list, kwargs1_list, logic2, args2_list, kwarg
         logic2_time += time_profiler(logic2, *args2, **kwargs2)
 
     return logic1_time / len(args1_list), logic2_time / len(args2_list)
+
+
+def object_memory(obj):
+    return asizeof.asizeof(obj)
