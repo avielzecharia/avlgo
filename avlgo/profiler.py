@@ -4,6 +4,22 @@ from datetime import datetime
 from pympler import asizeof
 
 
+class TimeContext:
+    def __init__(self):
+        self._start_time = 0
+        self._end_time = 0
+
+    def __enter__(self):
+        self._start_time = datetime.now()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self._end_time = datetime.now()
+
+    @property
+    def time(self):
+        return self._end_time - self._start_time
+
+
 @contextmanager
 def context_time_profiler():
     """
