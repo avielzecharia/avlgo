@@ -155,7 +155,7 @@ def prime_sum_in_sqrt_ranges(limit):
 
         # Updating the sqrt_up
         for i in range(1, elements_to_update):
-            # Basically, we may iterate on the first sqrt(n) elements and update their's sum.
+            # Basically, we may iterate on the first sqrt(n) elements and update theirs sum.
             # But, we may also note the indexes in the range(n // prime_square, sqrt(n)) would not be updated anymore !
             # Why ? because at this point sqrt_up does not contain the sum of numbers which divided by the primes
             # that are smaller than p, all the numbers below p * p are such numbers.

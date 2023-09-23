@@ -88,11 +88,11 @@ class DisjointSet:
         # in this way we promise to rank up iff the number of nodes at least doubled.
         if first_leader.rank < second_leader.rank:
             first_leader.parent = second_leader
-        else:
+        elif first_leader.rank > second_leader.rank:
             second_leader.parent = first_leader
-
-        if first_leader.rank == second_leader.rank:
+        else:
             # in case we got the same rank, we define the first to be the parent of the second.
+            second_leader.parent = first_leader
             first_leader.rank += 1
 
     @property
@@ -121,9 +121,9 @@ class DisjointSetElement:
     Represent an element in the disjoint set data structure.
     """
     def __init__(self, value):
-        self.value = value      # element data to store.
-        self.rank = 1           # the `maximal` height of the element node in his related tree.
-        self.parent = self      # the parent of the element node in his related tree.
+        self.value = value         # element data to store.
+        self.rank = 1              # the `maximal` height of the element node in his related tree.
+        self.parent = self         # the parent of the element node in his related tree.
 
     @property
     def is_leader(self):

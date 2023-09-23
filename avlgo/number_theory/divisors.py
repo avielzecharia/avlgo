@@ -113,7 +113,7 @@ def divisors_sum_range_sum(n, p=1, mod=None):
     :param mod: return the result modulo mod
     :type mod: int
     :return: SUM{divisors_sum(i, p) for i in [1,n]} % mod
-    :rtype: list[int]
+    :rtype: int
     """
     d_sum_range_sum = 0
     n_sqrt = int(sqrt(n))
