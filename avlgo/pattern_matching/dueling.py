@@ -183,6 +183,3 @@ def _mismatches_by_candidates_wave(text, pattern, candidates):
                 mismatches.append(text_index)
 
     return mismatches
-
-
-print(search_pattern_in_text('abcabc', 'ab'))
