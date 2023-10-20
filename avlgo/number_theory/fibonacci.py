@@ -1,4 +1,28 @@
-import avlgo.number_theory.sequence_nth as sequence_nth
+
+
+def fibonacci_generator(size, mod=None):
+    """
+    Generator of the  Fibonacci sequence.
+    F0 = 0, F1 = 1, Fn = Fn-1 + Fn-2
+
+    Time Complexity: O(n)
+    Space Complexity: O(n)
+
+    :param size: size of sequence to generate
+    :type size: int
+    :param mod: calculate Fn % mod
+    :type mod: int
+    :return: Fibonacci sequence generator
+    :rtype: list[int]
+    """
+    current_fib = 0
+    next_fib = 1
+    for _ in range(size):
+        yield current_fib
+        current_fib, next_fib = next_fib, current_fib + next_fib
+        if mod:
+            current_fib %= mod
+            next_fib %= mod
 
 
 def fibonacci_nth(n, mod=None):
@@ -16,6 +40,7 @@ def fibonacci_nth(n, mod=None):
     :return: Fn
     :rtype: int
     """
+    import avlgo.number_theory.sequence_nth as sequence_nth     # avoid circular dependencies
     return sequence_nth.linear_recursive_sequence_nth(
         n,
         coefficients=[1, 1],

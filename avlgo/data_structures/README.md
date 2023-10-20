@@ -5,8 +5,8 @@
 Merkle tree has many usages in the cryptographic & cyber world such as Certificate Transparency or Android `fsverity`. 
 
 The following API is exposed to the user:
-* `MerkleTree` - `add_node`, `proof`, `validate` with logarithmic time.
-* `SparseMerkleTree` - `mark`, `is_marked`, `proof`, `validate` with logarithmic time.
+* `MerkleTree` - `add_node`, `proof`, `validate` with logarithmic time for proving existence.
+* `SparseMerkleTree` - `mark`, `is_marked`, `proof`, `validate` with logarithmic time for proving non-existence.
 
 ## Succinct ##
 Data structures which uses an amount of space that is "close" to the information-theoretic lower bound.
