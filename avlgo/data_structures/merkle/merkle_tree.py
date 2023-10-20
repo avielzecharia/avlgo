@@ -134,17 +134,19 @@ class MerkleTree:
                  //    \\                           //      \\
                 ?        ?                      SPLIT_NODE  NEW_NODE
         """
+        # Keeping initial state
         parent_node = split_node.parent
+        is_root_split = self.is_root(split_node)
+
+        # Creating new connected nodes
         new_node = _MerkleNode.create_leaf(data, self._hash_alg)
         merge_node = _MerkleNode.create_node(left=split_node, right=new_node, hash_alg=self._hash_alg)
 
-        if split_node.parent:
-            split_node.parent.update_child(split_node, merge_node)
-        split_node.parent = merge_node
-
-        if self.is_root(split_node):
+        # Connect merge node to the tree
+        if is_root_split:
             self._root = merge_node
         else:
+            merge_node.parent = parent_node
             parent_node.update_child(merge_node, split_node)
 
         return merge_node, new_node
@@ -226,8 +228,8 @@ class _MerkleNode(BinaryTreeNode):
         else:
             self.left = new_child
 
-        self.height = max(self.left.height, self.right.height) + 1,
-        self.leaves_counter = self.left.leaves_counter + self.right.leaves_counter,
+        self.height = max(self.left.height, self.right.height) + 1
+        self.leaves_counter = self.left.leaves_counter + self.right.leaves_counter
         self.data = self.left.data_hash + self.right.data_hash
         self.data_hash = self.hash_alg(self.data).hexdigest().encode()
 

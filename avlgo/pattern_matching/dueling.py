@@ -79,6 +79,8 @@ def search_pattern_in_text(text, pattern, witness_table=None):
         return []
 
     mismatches = _mismatches_by_candidates_wave(text, pattern, candidates)
+    if not mismatches:
+        return candidates
 
     # Now, we should eliminate all the candidates which appear before mismatches (|pattern| characters before)
     matches = []
