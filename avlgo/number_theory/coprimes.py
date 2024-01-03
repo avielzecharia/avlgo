@@ -1,4 +1,5 @@
 from math import gcd
+from collections import deque
 
 from avlgo.number_theory.primes_factorization import prime_factors
 
@@ -42,6 +43,37 @@ def is_coprimes(a, b):
     :rtype: bool
     """
     return gcd(a, b) == 1
+
+
+def coprimes_generator(limit=float('inf')):
+    """
+    Generate all pairs of co-primes numbers up to a given limit
+
+    Time Complexity: O(n^2) [There are ~nC2 * (6/pi^2) coprimes tuples up to n]
+    Space Complexity: O(n^2)
+
+    :param limit: maximal number to generate co-primes up to.
+    :type limit: int
+    :return: generator of co-primes number (a, b) where 0 < b < a < limit
+    :rtype: list[tuple[int, int]]
+    """
+    coprimes_tree = deque([
+        (2, 1),
+        (3, 1)
+    ])
+
+    while coprimes_tree:
+        a, b = coprimes_tree.popleft()
+        yield a, b
+
+        nodes = [
+            (2 * a - b, a),
+            (2 * a + b, a),
+            (a + 2 * b, b)
+        ]
+        for node_a, node_b in nodes:
+            if node_a < limit:
+                coprimes_tree.append((node_a, node_b))
 
 
 # Note that there are formulas for the sum of the 2/3/... pow of the coprimes in some articles.
