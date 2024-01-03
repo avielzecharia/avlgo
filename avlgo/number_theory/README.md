@@ -3,6 +3,7 @@
 # Co-Primes #
 In `coprimes` module you can find methods for integers co-primes manipulations.
 * `is_coprime`, `coprimes` - co-primes exact calculations.
+* `coprimes_generator` - generating co-primes pairs.
 * `euler_totient`, `euler_totient_range` - counting the number of co-primes numbers.
 * `coprimes_sum`, `coprimes_sum_range` - summing the co-primes numbers.
 
@@ -14,7 +15,6 @@ The `diophantine_equation` module contains a set of core utils for solving Dioph
 * Solving regular equations
     * `linear_equation` - simple generic equation solver.
     * `linear_equation_sol_counter` - advanced solution counter.
-    
 
 ## Divisors ##
 `divisors` is a simple module for advanced number divisors' calculation.
@@ -68,3 +68,7 @@ Use `pythagoras` module for simple Pythagoras facts.
 For generic sequence calculation, use the `sequence_nth` module
 * `triangular_nth`, `pentagonal_nth`, `catalan_nth` - specific known sequences.
 *  `linear_recursive_sequence_nth` - a strong tool for generic "linear recursive" sequence calculation.
+
+## Square Free ##
+`square_free` module contains useful methods regarding Square Free numbers.
+* `square_free_counter` - counting the number of square-free nmbers.
