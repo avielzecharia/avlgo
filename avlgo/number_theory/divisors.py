@@ -32,6 +32,30 @@ def divisors(n):
     return sqrt_down_divisors + sqrt_up_divisors
 
 
+def divisors_range(n):
+    """
+    Generate all divisors for all numbers in [1, n].
+
+    Time Complexity: O(n * log(n))
+    Space Complexity: O(n * log(n))
+
+    :param n: limit to generate divisors up to
+    :type n: int
+    :return: [divisors(i) for i in [1,n]]
+    :rtype: list[list[int]]
+    """
+    divisor = 1
+    divisors_result = [[] for _ in range(n+1)]
+
+    while divisor <= n:
+        for divided in range(divisor, n + 1, divisor):
+            divisors_result[divided].append(divisor)
+
+        divisor += 1
+
+    return divisors_result
+
+
 # Another approach could be using prime factorization of n, and the fact that D_S is multiplicative function.
 # Assuming n = PI(Pi ^ Ai) for i in [1, r], D_S = {sigma{Pi^j}} = PI{(Pi^(Ai + 1) - 1) / (Pi^x - 1)} for i in [1, r]
 # But, calculating modulo in this approach would be inefficient for big numbers.

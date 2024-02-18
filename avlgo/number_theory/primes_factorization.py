@@ -106,7 +106,7 @@ def prime_factors_range(n, primes=None):
     Time Complexity: O(n * log(log(n)))
     Space Complexity: O(n * log(log(n)))
 
-    :param n: limit to caLculate prime factors up to.
+    :param n: limit to calculate prime factors up to.
     :type n: int
     :param primes: list of primes up to n (pre-processed).
     :type primes: list[int]
@@ -124,6 +124,33 @@ def prime_factors_range(n, primes=None):
             prime_factors_r[i].append(PrimeFactor(prime, prime_exp(i, prime)))
 
     return prime_factors_r
+
+
+def distinct_prime_factors_range(n, primes=None):
+    """
+    Calculates the distinct primes factorization for all number up to n.
+
+    Time Complexity: O(n * log(log(n)))
+    Space Complexity: O(n * log(log(n)))
+
+    :param n: limit to calculate distinct prime factors up to.
+    :type n: int
+    :param primes: list of primes up to n (pre-processed).
+    :type primes: list[int]
+    :return: [[p1, ...], [p2, ...], ...]
+    :rtype: list[list[int]]
+    """
+    distinct_prime_factors_r = [[] for _ in range(n + 1)]
+    primes = primes if primes else sieve_of_eratosthenes(n)
+
+    # By Legendre theorem, each prime appears (n - 1) / (p - 1) times top.
+    # As a result, we are counting & saving the prime power in the factorization at most (n - 1) / (p - 1)
+    # time for all primes in [1, n], so the complexities are n * log(log(n)) [inverse primes sum]
+    for prime in primes:
+        for i in range(prime, n + 1, prime):
+            distinct_prime_factors_r[i].append(prime)
+
+    return distinct_prime_factors_r
 
 
 def factorial_prime_factors(n, primes=None):
