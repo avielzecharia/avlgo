@@ -67,7 +67,7 @@ def pell_number_nth(n, mod=None):
     Time Complexity: O(log(n))
     Space Complexity: O(1)
 
-    :param n:
+    :param n: nth element to get from the series.
     :type n: int
     :param mod: calc P(n) % mod instead of P(n)
     :type mod: int
