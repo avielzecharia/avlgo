@@ -59,6 +59,30 @@ def catalan_nth(n):
     return comb(2 * n, n) // (n + 1)
 
 
+def pell_number_nth(n, mod=None):
+    """
+    Calculates the nth Pell number.
+    NOTE: this method uses `linear_recursive_sequence_nth` technique and therefore also the same limitations.
+
+    Time Complexity: O(log(n))
+    Space Complexity: O(1)
+
+    :param n:
+    :type n: int
+    :param mod: calc P(n) % mod instead of P(n)
+    :type mod: int
+    :return: nth Pell number
+    :rtype: int
+    """
+    # P(n) = 2 * P(n-1) + P(n-2); P(0) = 0; P(1) = 1
+    return linear_recursive_sequence_nth(
+        n=n,
+        coefficients=[2, 1],
+        base_cases=[0, 1],
+        mod=mod
+    )
+
+
 def linear_recursive_sequence_nth(n, coefficients, base_cases, mod=None):
     """
     Calculate the nth element in a custom linear recursive series.
