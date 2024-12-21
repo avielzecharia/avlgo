@@ -45,6 +45,43 @@ def geometric_progression_sum(a1, q, n):
     return (1 - q ** n) // (1 - q) * a1
 
 
+# Note that this dum technique might be used when it is hard to calculate q-1 inverse.
+# e.g. while the sum is of matrix, or even modulo non-prime number
+def geometric_recursive_progression_sum(a1, q, n, mod=None):
+    """
+    Calculates the sum of Geometric Progression.
+
+    Time Complexity: O(log(n))
+    Space Complexity: O(1)
+
+    :param a1: first element
+    :type a1: float
+    :param q: sequence common ratio
+    :type q: float
+    :param n: number of elements
+    :type n: int
+    :param mod: calculate the sum modulo mod
+    :type mod: int
+    :return: series sum
+    :rtype: float
+    """
+    result = None
+    if n == 1:
+        # S(0) = F(0) * q^0 = F(0)
+        result = a1
+    elif n % 2 == 0:
+        # S(n) = F(0) + F(1) + ... + F(n-1) = [F(0) + F(2) + ...] + [F(1) + F(3) + ...] =
+        #      = [F(0) + F(2) + ...] + q * [F(0) + F(2) + ...] = (1 + q) * [F(0) + F(2) + ...]
+        result = geometric_recursive_progression_sum(a1, pow(q, 2, mod), n // 2, mod)
+        result *= (1 + q)
+    else:
+        # S(n) = S(n-1) + F(n)
+        result = a1 * pow(q, n-1, mod)
+        result += geometric_recursive_progression_sum(a1, q, n-1, mod)
+
+    return (result % mod) if mod else result
+
+
 def geometric_progression_inf_sum(a1, q):
     """
     Calculates the sum of infinite Geometric Progression.
