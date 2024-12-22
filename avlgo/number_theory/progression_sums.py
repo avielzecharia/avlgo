@@ -25,11 +25,11 @@ def arithmetic_progression_sum(a1, an, n, mod=None):
     return result
 
 
-def geometric_progression_sum(a1, q, n):
+def geometric_progression_sum(a1, q, n, mod=None):
     """
     Calculates the sum of Geometric Progression.
 
-    Time Complexity: O(1)
+    Time Complexity: O(log(n))
     Space Complexity: O(1)
 
     :param a1: first element
@@ -38,11 +38,22 @@ def geometric_progression_sum(a1, q, n):
     :type q: float
     :param n: number of elements
     :type n: int
+    :param mod: calculate the sum modulo mod
+    :type mod: int
     :return: series sum
     :rtype: float
     """
-    # 1-q must divide 1-q^n, therefore we first divide for better performance
-    return (1 - q ** n) // (1 - q) * a1
+    # S = a1 * (q^n-1) / (q-1)
+    # Since we cannot guarantee that (q-1, mod) are coprimes (so we can calculate inverse modulo),
+    # we are first calculating result modulo mod*(q-1), them dividing by (q-1).
+    extended_mod = mod * (q - 1) if mod else None
+    result = pow(q, n, extended_mod) - 1
+
+    # q-1 must divide q^n-1, therefore we first divide for better performance
+    result //= q - 1
+    result *= a1
+
+    return result % mod if mod else result
 
 
 # Note that this dum technique might be used when it is hard to calculate q-1 inverse.
