@@ -111,27 +111,30 @@ def sieve_of_atkin(limit):
 
 
 # This method is very useful, because if we asked to calculate some sum which related to primes we can use that.
-# e.g. sum factorizations of a factorial S(5) = 2+2+2+3+5
-# Calculating primes below sqrt n will be easy, using Legendre's formula.
+# e.g. sum all non-distinct primes in prime factorizations of a factorial: 5!=2^3*3*5 -> S(5) = 2+2+2+3+5
+# Calculating explicit primes below sqrt n will be easy. Then, by using Legendre's formula.
 # All primes from N // 2 to N // 1 appears exactly once, so we can calc 1 * sum in this range
 # All primes from N // 3 to N // 2 appears exactly twice, so we can calc 2 * sum in this range
 # ...
 # All primes from N // sqrt(n) to N // (sqrt(n) - 1) appears exactly sqrt(n) - 1 times, ...
-def prime_sum_in_sqrt_ranges(limit):
+def prime_sum_in_sqrt_ranges(limit, p=1):
     """
     Get all primes sum up the following ranges: [1, 2, ..., sqrt(n)] [n, n // 2, ..., n // (sqrt(n)-1), n // (sqrt(n))]
+
+    Note that where p=0, we are getting the prime count function.
 
     Time Complexity: O(n ^ 0.75 / log(n))
     Space Complexity: O(sqrt(n))
 
     :param limit: upper limit for primes sum.
     :type limit: int
+    :param p: power to calculate ith prime in the sum
+    :type p: int
     :return: 2 lists sqrt_down, sqrt_up with size sqrt(n)
-             sqrt_down[i] gives the sum of primes up to i
-             sqrt_up[i] gives the sum of primes up to n // i
+             sqrt_down[i] gives the sum of primes (power p) up to i
+             sqrt_up[i] gives the sum of primes (power p) up to n // i
     :rtype: tuple[list[int], list[int]]
     """
-    # TODO: make is sum with pow (maybe also mod)
     if limit <= 1:
         raise ValueError("{} too small".format(limit))
 
@@ -139,8 +142,8 @@ def prime_sum_in_sqrt_ranges(limit):
 
     # Initialize output lists with sum of all numbers from 2 up to i (or n // i)
     # 1 is excluded in order to avoid subtraction of the current prime in the progress later.
-    sqrt_down = [int(consecutive_progression_sum(n, start=2)) for n in range(limit_sqrt + 1)]
-    sqrt_up = [0] + [int(consecutive_progression_sum(limit // i, start=2)) for i in range(1, limit_sqrt + 1)]
+    sqrt_down = [int(consecutive_progression_sum(n, start=2, p=p)) for n in range(limit_sqrt + 1)]
+    sqrt_up = [0] + [int(consecutive_progression_sum(limit // i, start=2, p=p)) for i in range(1, limit_sqrt + 1)]
 
     for prime in range(2, limit_sqrt + 1):
         # Now, for each iteration update the ith place in the arrays to be the sum of all
@@ -164,11 +167,11 @@ def prime_sum_in_sqrt_ranges(limit):
             if d <= limit_sqrt:
                 # Reduce all the multiplies of the current prime from the ith sum,
                 # while keeping the sum of the primes by the known_primes_sum variable.
-                sqrt_up[i] -= (sqrt_up[d] - known_primes_sum) * prime
+                sqrt_up[i] -= (sqrt_up[d] - known_primes_sum) * pow(prime, p)
             else:
                 # Here we can see why is it working so nice with the sqrt ranges :)
                 # We can calculate it just because for any i: n // i is one of sqrt_down or sqrt_up
-                sqrt_up[i] -= (sqrt_down[limit // d] - known_primes_sum) * prime
+                sqrt_up[i] -= (sqrt_down[limit // d] - known_primes_sum) * pow(prime, p)
 
         # Updating the sqrt_down
         for i in range(limit_sqrt, prime_square - 1, -1):
@@ -176,7 +179,7 @@ def prime_sum_in_sqrt_ranges(limit):
             # But, we may also note the indexes in the range(1, prime_square) would not be updated anymore !
             # Why ? because at this point sqrt_down does not contain the sum of numbers which divided by the primes
             # that are smaller than p, all the numbers below p * p are such numbers :)
-            sqrt_down[i] -= (sqrt_down[i // prime] - known_primes_sum) * prime
+            sqrt_down[i] -= (sqrt_down[i // prime] - known_primes_sum) * pow(prime, p)
 
     return sqrt_down, sqrt_up
 
