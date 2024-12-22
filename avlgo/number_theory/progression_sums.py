@@ -132,7 +132,7 @@ def consecutive_progression_sum(end, p=1, start=1, mod=None):
     if start > end:
         return 0
     if start != 1:
-        result = consecutive_progression_sum(end, p) - consecutive_progression_sum(start - 1, p)
+        result = consecutive_progression_sum(end, p, mod=mod) - consecutive_progression_sum(start - 1, p, mod=mod)
         return result % mod if mod else result
 
     if p == 0:
@@ -143,7 +143,7 @@ def consecutive_progression_sum(end, p=1, start=1, mod=None):
         result = end * (end + 1) * (2 * end + 1) // 6
         return result % mod if mod else result
     if p == 3:
-        return pow(consecutive_progression_sum(end, 2), 2, mod)     # Nicomachus's theorem
+        return pow(consecutive_progression_sum(end, 2, mod=mod), 2, mod)     # Nicomachus's theorem
 
     # TODO: implementation using Bernoulli Numbers
     raise NotImplementedError("Currently support powers {0,1,2,3} only ")
