@@ -62,7 +62,12 @@ def _square_free_counter_comb(n, primes, comb, depth, last_prime_ind=-1, multipl
         if prime > prime_limiter or multiplication * prime > multiplication_limiter:
             break
 
-        result += _square_free_counter_comb(n, primes, comb, depth - 1, prime_ind, multiplication * prime)
+        tmp_result = _square_free_counter_comb(n, primes, comb, depth - 1, prime_ind, multiplication * prime)
+        if tmp_result == 0:
+            # The next calls from now and on will be 0 as well.
+            break
+
+        result += tmp_result
 
     return result
 
